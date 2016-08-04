@@ -2,4 +2,4 @@
 
 `npm run dev`
 
-`start http://localhost:8080/dist/`
+`start http://localhost:8080/dev/`
