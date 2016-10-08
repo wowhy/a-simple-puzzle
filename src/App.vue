@@ -3,12 +3,12 @@
     <h3>当前使用步数 {{steps}}</h3>
 
     <ul class="puzzle-wrap">
-      <li v-for="puz in puzzles" class="puzzle" :class="{'puzzle-empty': !puz }" @click="moveFn($index)">
+      <li v-for="(puz, index) in puzzles" class="puzzle" :class="{'puzzle-empty': !puz }" @click="moveFn(index)">
         {{ puz }}
       </li>
     </ul>
 
-    <button class="reset" type="button" @click="render">重置</button>
+    <button class="reset" type="button" @click="paint">重置</button>
   </div>
 </template>
 
@@ -28,6 +28,8 @@
          * 7 8 9
          */
 
+        debugger
+
         let puzzles = this.puzzles
         let length = puzzles.length
 
@@ -41,15 +43,16 @@
 
         if (up >= 0 && check(up)) {
           swap(up)
-        } else if (left >= 0 && check(left)) {
+        } else if (left >= 0 && index % 3 !== 0 && check(left)) {
           swap(left)
-        } else if (right < length && check(right)) {
+        } else if (right < length && index % 3 !== 2 && check(right)) {
           swap(right)
         } else if (down < length && check(down)) {
           swap(down)
+        } else {
+          return
         }
 
-        this.$set('puzzles', puzzles)
         this.steps++;
 
         if (overgame()) {
@@ -64,8 +67,8 @@
 
         function swap(target) {
           let tmp = puzzles[index]
-          puzzles.$set(index, puzzles[target])
-          puzzles.$set(target, tmp)
+          puzzles[index] = puzzles[target]
+          puzzles[target] = tmp
         }
 
         function overgame() {
@@ -85,7 +88,7 @@
           return true
         }
       },
-      render() {
+      paint() {
         let size = 8;
         let puzzles = []
         for (let i = 0; i < size; i++) {
@@ -108,8 +111,8 @@
       }
     },
 
-    ready() {
-      this.render()
+    created() {
+      this.paint()
     }
   }
 </script>
